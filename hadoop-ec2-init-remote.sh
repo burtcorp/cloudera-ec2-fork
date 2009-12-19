@@ -735,10 +735,30 @@ function configure_nfs {
   ln -nfsT /mnt/home /home
 }
 
+# mount remote nfs volume on the master node.
+# $NFS_MOUNT should have the shape 'host:path:mount_point'
+function configure_remote_nfs {
+  if $IS_MASTER; then if [ ! -z $NFS_MOUNT ]; then # <3 bash's control structures.
+    nfs_host_and_path=${NFS_MOUNT%:*}
+    nfs_mount_point=${NFS_MOUNT#*:*:}
+    # ensure sanity.
+    if [ -z $nfs_mount_point ]; then
+      echo "egads: NFS_MOUNT option malformed."
+      NFS_MOUNT="" # reset to avoid further embarrassment.
+      return
+    fi
+    grep -q $nfs_mount_point /etc/fstab || ( echo "$nfs_host_and_path $nfs_mount_point  nfs rw  0 0" >> /etc/fstab )
+    mkdir -p $nfs_mount_point
+  fi; fi
+}
+
 function start_nfs {
   if $IS_MASTER; then
     /etc/init.d/nfs-kernel-server restart
     /etc/init.d/nfs-common restart
+    if [ ! -z $NFS_MOUNT ]; then
+      mount $nfs_mount_point
+    fi
   else
     /etc/init.d/nfs-common restart
     mount /mnt/home
@@ -800,6 +820,7 @@ function cleanup {
 
 install_nfs
 configure_nfs
+configure_remote_nfs
 register_auto_shutdown
 update_repo
 install_user_packages

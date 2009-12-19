@@ -56,7 +56,7 @@ def list(cluster_name):
 
 def launch_master(cluster, image_id, key_name, user_data_file_template=None,
     instance_type='m1.small', placement=None, user_packages=None,
-    auto_shutdown=None, env_strings=[], client_cidrs=[]):
+    auto_shutdown=None, env_strings=[], client_cidrs=[], nfs_mount=None):
   if user_data_file_template == None:
     user_data_file_template = DEFAULT_USER_DATA_FILE_TEMPLATE
   if cluster.check_running(MASTER, 0):
@@ -68,7 +68,8 @@ def launch_master(cluster, image_id, key_name, user_data_file_template=None,
   replacements = { "%ENV%": build_env_string(ENV_WHITELIST, env_strings, {
     "USER_PACKAGES": user_packages,
     "AUTO_SHUTDOWN": auto_shutdown,
-    "EBS_MAPPINGS": ebs_mappings
+    "EBS_MAPPINGS": ebs_mappings,
+    "NFS_MOUNT": nfs_mount
   }) }
   reservation = cluster.launch_instances(MASTER, 1, image_id, key_name, user_data_file_template, replacements, instance_type, placement)
   print "Waiting for master to start (%s)" % str(reservation)
