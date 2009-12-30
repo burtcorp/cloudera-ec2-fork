@@ -32,7 +32,9 @@ HADOOP="hadoop-0.20"
 
 function register_auto_shutdown() {
   if [ ! -z "$AUTO_SHUTDOWN" ]; then
-    shutdown -h +$AUTO_SHUTDOWN >/dev/null &
+    at now << EOF
+      shutdown -h +$AUTO_SHUTDOWN >/dev/null
+EOF
   fi
 }
 
@@ -818,10 +820,10 @@ function cleanup {
   updatedb
 }
 
+register_auto_shutdown
 install_nfs
 configure_nfs
 configure_remote_nfs
-register_auto_shutdown
 update_repo
 install_user_packages
 install_hadoop
