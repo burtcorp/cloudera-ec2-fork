@@ -791,6 +791,10 @@ function configure_devtools {
   $GEM_COMMAND extlib oniguruma fastercsv json libxml-ruby htmlentities addressable uuidtools
   # Ruby gems: Wukong and friends
   $GEM_COMMAND wukong monkeyshines edamame wuclan
+  # an old version of tinder
+  $GEM_COMMAND --version 1.2.2 tinder
+  # piglet, please.
+  $GEM_COMMAND piglet
   #
   # export CLASSPATH=$( echo `/bin/ls /usr/lib/pig/*.jar /usr/lib/hadoop/*.jar /usr/lib/hadoop/lib/*.jar` | ruby -e 'puts $stdin.read.chomp.gsub(/\s/, ":")' )
   # ( cd /usr/lib/pig/contrib ;
