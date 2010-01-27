@@ -277,7 +277,7 @@ function scaffold_hadoop_dirs {
     MAPRED_LOCAL_DIR=/mnt/hadoop/mapred/local
     MAX_MAP_TASKS=2             #  2 orig
     MAX_REDUCE_TASKS=1          #  1 orig
-    CLUSTER_REDUCE_TASKS=10     # 10 orig
+    CLUSTER_REDUCE_TASKS=2     # 10 orig
     CHILD_OPTS=-Xmx550m
     CHILD_ULIMIT=1126400
     ;;
