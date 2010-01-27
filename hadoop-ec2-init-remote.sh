@@ -537,6 +537,11 @@ jvm.class=org.apache.hadoop.metrics.spi.NoEmitMetricsContext
 rpc.class=org.apache.hadoop.metrics.spi.NoEmitMetricsContext
 EOF
 
+  cat >> /etc/$HADOOP/conf.dist/log4j.properties <<EOF
+# disable creation of _logs directories.
+hadoop.job.history.user.location=none
+EOF
+
   # Keep PID files in a non-temporary directory
   sed -i -e "s|# export HADOOP_PID_DIR=.*|export HADOOP_PID_DIR=/var/run/hadoop|" \
     /etc/$HADOOP/conf.dist/hadoop-env.sh
