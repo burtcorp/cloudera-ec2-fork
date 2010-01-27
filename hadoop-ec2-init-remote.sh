@@ -31,6 +31,8 @@ REPO="testing"
 HADOOP="hadoop-0.20"
 
 function register_auto_shutdown() {
+  # assuming (usually incorrectly) that atd is init'd before user-data.
+  # if it is not, the shutdown command will be registered when atd is started.
   if [ ! -z "$AUTO_SHUTDOWN" ]; then
     at now << EOF
       shutdown -h +$AUTO_SHUTDOWN >/dev/null
