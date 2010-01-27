@@ -275,7 +275,7 @@ function scaffold_hadoop_dirs {
     # "m1.small"
     # 1.7GB 1 core x 1 32bit $0.10/hr
     MAPRED_LOCAL_DIR=/mnt/hadoop/mapred/local
-    MAX_MAP_TASKS=2             #  2 orig
+    MAX_MAP_TASKS=6             #  2 orig
     MAX_REDUCE_TASKS=1          #  1 orig
     CLUSTER_REDUCE_TASKS=2     # 10 orig
     CHILD_OPTS=-Xmx550m
