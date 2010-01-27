@@ -178,9 +178,10 @@ if __name__ == "__main__":
     launch_master(cluster, opt.get('ami'), opt.get('key_name'), opt.get('user_data_file'),
       opt.get('instance_type'), opt.get('availability_zone'), opt.get('user_packages'),
       opt.get('auto_shutdown'), opt.get('env'), opt.get('client_cidr'), opt.get('nfs_mount'))
+    attach_storage(cluster, (MASTER,))
     launch_slaves(cluster, number_of_slaves, opt.get('user_data_file'),
       opt.get('user_packages'), opt.get('auto_shutdown'), opt.get('env'))
-    attach_storage(cluster, ROLES)
+    attach_storage(cluster, (SLAVE,))
     wait_for_hadoop(cluster, number_of_slaves)
     print_master_url(cluster)
 
