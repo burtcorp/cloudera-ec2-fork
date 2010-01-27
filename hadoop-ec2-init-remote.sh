@@ -233,6 +233,11 @@ function scaffold_local_hdfs {
 
 # Common directories, whether the HDFS is instance-local or EBS
 # Settings appropriate to instance type: http://aws.amazon.com/ec2/instance-types/
+# MAX_MAP_TASKS: Set to about 2x # cores. If you mostly use streaming, turn up
+# the number of map tasks slightly. (May not be necessary with reuse_jvms)
+# MAX_REDUCE_TASKS: Set this to the number of cores
+# CLUSTER_REDUCE_TASKS: For 1.7GB instances, set to just below the # machines;
+# for larger memory/core machines, set to just below the # cores
 function scaffold_hadoop_dirs {
   case $INSTANCE_TYPE in
   m1.xlarge|c1.xlarge)
