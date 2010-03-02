@@ -239,7 +239,7 @@ echo Proxy pid %s;""" % (process.pid, process.pid)
   elif command == 'create-formatted-snapshot':
     (opt, args, cluster) = parse_options(command, extra_arguments=("SIZE",))
     size = int(args[1])
-    AMI_UBUNTU_INTREPID_X86 = 'ami-ec48af85' # want a general AMI to do formatting
+    AMI_UBUNTU_INTREPID_X86 = 'ami-84446ff0' # want a general AMI to do formatting
     create_formatted_snapshot(cluster, size, opt.get('availability_zone'),
       AMI_UBUNTU_INTREPID_X86, opt.get('key_name'), xstr(opt.get('ssh_options')))
 
