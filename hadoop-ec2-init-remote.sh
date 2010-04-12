@@ -803,6 +803,8 @@ function configure_devtools {
   $GEM_COMMAND wukong monkeyshines edamame wuclan
   # an old version of tinder
   $GEM_COMMAND --version 1.2.2 tinder
+  # numpy
+  apt-get install -y python-numpy
   # piglet, please.
   $GEM_COMMAND piglet
   #
