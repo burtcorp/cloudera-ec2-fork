@@ -847,7 +847,7 @@ install_cloudera_desktop
 configure_hadoop
 configure_cloudera_desktop
 start_nfs
-#configure_devtools
+configure_devtools
 
 if $IS_MASTER ; then
   setup_web
