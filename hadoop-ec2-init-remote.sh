@@ -30,6 +30,7 @@ fi
 REPO="testing"
 HADOOP="hadoop-0.20"
 
+
 function register_auto_shutdown() {
   # assuming (usually incorrectly) that atd is init'd before user-data.
   # if it is not, the shutdown command will be registered when atd is started.
@@ -38,6 +39,13 @@ function register_auto_shutdown() {
       shutdown -h +$AUTO_SHUTDOWN >/dev/null
 EOF
   fi
+}
+
+function disable_rc_local() {
+    if [ ! -z "$DISABLE_RC_LOCAL" ]; then
+       echo "disabling /etc/rc.local"
+       echo "exit 0;" > /etc/rc.local
+    fi
 }
 
 function update_repo() {
@@ -850,6 +858,8 @@ configure_hadoop
 configure_cloudera_desktop
 start_nfs
 configure_devtools
+disable_rc_local
+
 
 if $IS_MASTER ; then
   setup_web
