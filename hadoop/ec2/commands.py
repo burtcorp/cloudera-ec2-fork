@@ -19,6 +19,7 @@ from __future__ import with_statement
 
 from hadoop.ec2.cluster import get_clusters_with_role
 from hadoop.ec2.cluster import Cluster
+from hadoop.ec2.cluster import TimeoutException
 from hadoop.ec2.storage import Storage
 from hadoop.ec2.util import build_env_string
 from hadoop.ec2.util import url_get
@@ -71,14 +72,20 @@ def launch_master(cluster, image_id, key_name, user_data_file_template=None,
     "EBS_MAPPINGS": ebs_mappings,
     "NFS_MOUNT": nfs_mount
   }) }
-  reservation = cluster.launch_instances(MASTER, 1, image_id, key_name, user_data_file_template, replacements, instance_type, placement)
-  print "Waiting for master to start (%s)" % str(reservation)
-  cluster.wait_for_instances(reservation)
-  print
-  cluster.print_status((MASTER,))
-  master = cluster.check_running(MASTER, 1)[0]
-  _authorize_client_ports(cluster, master, client_cidrs)
-  _create_client_hadoop_site_file(cluster, master)
+  while True:
+    reservation = cluster.launch_instances(MASTER, 1, image_id, key_name, user_data_file_template, replacements, instance_type, placement)
+    print "Waiting for master to start (%s)" % str(reservation)
+    try:
+      cluster.wait_for_instances(reservation)
+      print; cluster.print_status((MASTER,))
+      master = cluster.check_running(MASTER, 1)[0]
+      _authorize_client_ports(cluster, master, client_cidrs)
+      _create_client_hadoop_site_file(cluster, master)
+    except TimeoutException:
+      print "Timeout while waiting for master to start. Cancelling reservation."
+      cluster.terminate_reservation(reservation)
+      time.sleep(60);
+      print "Retrying."
 
 def _authorize_client_ports(cluster, master, client_cidrs):
   if not client_cidrs:
@@ -165,12 +172,19 @@ def launch_slaves(cluster, number, user_data_file_template=None,
     "EBS_MAPPINGS": ebs_mappings,
     "MASTER_HOST": master.public_dns_name
   }) }
-  reservation = cluster.launch_instances(SLAVE, number, master.image_id, master.key_name, user_data_file_template,
-    replacements, master.instance_type, master.placement)
-  print "Waiting for slaves to start"
-  cluster.wait_for_instances(reservation)
-  print
-  cluster.print_status((SLAVE,))
+  while True:
+    reservation = cluster.launch_instances(SLAVE, number, master.image_id, master.key_name, user_data_file_template,
+      replacements, master.instance_type, master.placement)
+    print "Waiting for slaves to start"
+    try:
+      cluster.wait_for_instances(reservation)
+      print; cluster.print_status((SLAVE,))
+      break
+    except TimeoutException:
+      print "Timeout while waiting for slaves to start. Cancelling reservation."
+      cluster.terminate_reservation(reservation)
+      time.sleep(60);
+      print "Retrying."
 
 def wait_for_hadoop(cluster, number):
   instances = cluster.check_running(MASTER, 1)

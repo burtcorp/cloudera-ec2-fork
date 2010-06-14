@@ -169,12 +169,18 @@ class Cluster(object):
       placement=placement);
     return reservation
 
-  def wait_for_instances(self, reservation):
+  def wait_for_instances(self, reservation, timeout=600):
     instances = [instance.id for instance in reservation.instances]
-    # TODO(tom): should timeout
+    start_time = time.time()
     while True:
-      if self.all_started(self.ec2Connection.get_all_instances(instances)):
-        break
+      if (time.time() - start_time >= timeout):
+        raise TimeoutException()
+      try:
+        if self.all_started(self.ec2Connection.get_all_instances(instances)):
+          break
+      # don't timeout for race condition where instance is not yet registered
+      except EC2ResponseError:
+        pass
       sys.stdout.write(".")
       sys.stdout.flush()
       time.sleep(1)
@@ -190,3 +196,9 @@ class Cluster(object):
     instances = self.get_instances(self.get_cluster_group_name(), "running")
     if instances:
       self.ec2Connection.terminate_instances([i.id for i in instances])
+
+  def terminate_reservation(self, reservation):
+    self.ec2Connection.terminate_instances([i.id for i in reservation.instances])
+
+class TimeoutException(Exception):
+  pass
