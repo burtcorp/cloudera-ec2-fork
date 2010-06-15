@@ -81,6 +81,7 @@ def launch_master(cluster, image_id, key_name, user_data_file_template=None,
       master = cluster.check_running(MASTER, 1)[0]
       _authorize_client_ports(cluster, master, client_cidrs)
       _create_client_hadoop_site_file(cluster, master)
+      break
     except TimeoutException:
       print "Timeout while waiting for master to start. Cancelling reservation."
       cluster.terminate_reservation(reservation)
