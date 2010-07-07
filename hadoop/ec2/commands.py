@@ -127,10 +127,6 @@ def _create_client_hadoop_site_file(cluster, master):
   <value>%(master)s:8021</value>
 </property>
 <property>
-  <name>hadoop.socks.server</name>
-  <value>localhost:6666</value>
-</property>
-<property>
   <name>hadoop.rpc.socket.factory.class.default</name>
   <value>org.apache.hadoop.net.SocksSocketFactory</value>
 </property>
