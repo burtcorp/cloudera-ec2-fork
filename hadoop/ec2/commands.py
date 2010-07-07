@@ -116,7 +116,7 @@ def _create_client_hadoop_site_file(cluster, master):
 <configuration>
 <property>
   <name>hadoop.job.ugi</name>
-  <value>root,root</value>
+  <value>burt,superuser</value>
 </property>
 <property>
   <name>fs.default.name</name>
