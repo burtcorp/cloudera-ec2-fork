@@ -567,7 +567,7 @@ EOF
     /etc/$HADOOP/conf.dist/hadoop-env.sh
 
   # Hadoop logs should be on the /mnt partition
-  rm -rf /var/log/hadoop /var/log/hadoop
+  rm -rf /var/log/hadoop /var/log/hadoop-0.20
   mkdir /mnt/hadoop/logs
   ln -nfsT /mnt/hadoop/logs /var/log/hadoop
   ln -nfsT /mnt/hadoop/logs /var/log/hadoop-0.20
