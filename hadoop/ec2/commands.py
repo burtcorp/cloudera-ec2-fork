@@ -101,7 +101,7 @@ def _authorize_client_ports(cluster, master, client_cidrs):
     cluster.authorize_role(MASTER, 50030, 50030, client_cidr)
     # Allow access to namenode and jobtracker via public address from master node
   master_ip = socket.gethostbyname(master.public_dns_name)
-  cluster.authorize_role(MASTER, 8020, 8021, "%s/32" % master_ip)
+  #cluster.authorize_role(MASTER, 8020, 8021, "%s/32" % master_ip)
 
 def _create_client_hadoop_site_file(cluster, master):
   cluster_dir = os.path.join(os.environ['HOME'], '.hadoop-ec2/%s' % cluster.name)
